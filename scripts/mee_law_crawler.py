@@ -5,11 +5,10 @@ Download/search environmental regulations from the Ministry of Ecology and Envir
 Source: https://www.mee.gov.cn/ywgz/fgbz/
 
 Categories:
-  法律(fl), 行政法规(xzfg), 规章(gzk/gz), 标准(bz)
+  法律(fl), 行政法规(xzfg), 规章(gzk/gz)
 
 Usage:
   python mee_law_crawler.py --search "碳" --size 20
-  python mee_law_crawler.py --category 标准 --size 50
   python mee_law_crawler.py --category 法律 --size 100
   python mee_law_crawler.py --info "https://www.mee.gov.cn/ywgz/fgbz/fl/202603/t20260313_1146496.shtml"
 """
@@ -51,14 +50,12 @@ CATEGORY_MAP = {
     "法律": "fl",
     "行政法规": "xzfg",
     "规章": "gz",  # actual path is /gzk/gz/
-    "标准": "bz",
 }
 
 CATEGORY_URLS = {
     "fl": f"{FG_BASE}/fl/",
     "xzfg": f"{FG_BASE}/xzfg/",
     "gz": f"{BASE_URL}/gzk/gz/",  # different base path
-    "bz": f"{FG_BASE}/bz/",
 }
 
 HEADERS = {
@@ -312,10 +309,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="生态环境部法规标准搜索/下载工具",
         epilog=(
-            "Categories: 全部, 法律, 行政法规, 规章, 标准\n\n"
+            "Categories: 全部, 法律, 行政法规, 规章\n\n"
             "Examples:\n"
             "  python mee_law_crawler.py --search '碳' --size 20\n"
-            "  python mee_law_crawler.py --category 标准 --size 50\n"
             "  python mee_law_crawler.py --category 法律 --size 100\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

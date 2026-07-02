@@ -424,7 +424,7 @@ POST https://www.chinatax.gov.cn/getFileListByCodeId
 
 **Source:** `https://www.mee.gov.cn/ywgz/fgbz/`
 
-Covers environmental laws, regulations, rules, and standards from the Ministry of Ecology and Environment.
+Covers environmental laws, regulations, and rules from the Ministry of Ecology and Environment.
 
 **Script:** `scripts/mee_law_crawler.py`
 
@@ -439,9 +439,9 @@ python scripts/mee_law_crawler.py --category 标准 --size 50
 python scripts/mee_law_crawler.py --info "https://www.mee.gov.cn/ywgz/fgbz/fl/202603/t20260313_1146496.shtml"
 ```
 
-**Categories:** 全部, 法律, 行政法规, 规章, 标准
+**Categories:** 全部, 法律, 行政法规, 规章
 
-**Note:** This site uses static HTML pages. All tabs are pre-loaded in the main page HTML. Keyword filtering is done client-side on titles.
+**Note:** This site uses static HTML pages. All tabs are pre-loaded in the main page HTML. Keyword filtering is done client-side on titles. 标准(环保标准)不包含在本数据源中。
 
 ---
 

@@ -14,7 +14,7 @@
 6. **党内法规库** — `www.12371.cn/special/dnfg/`
 7. **国防部法规文库** — `www.mod.gov.cn/gfbw/fgwx/`
 8. **税务法规库** — `fgk.chinatax.gov.cn`
-9. **生态环境部法规标准** — `mee.gov.cn/ywgz/fgbz/`
+9. **生态环境部法规规章** — `mee.gov.cn/ywgz/fgbz/`（法律、行政法规、规章）
 
 > This is a Claude Code / Kimi Agent / Codex skill for searching, verifying, downloading, and exporting Chinese legal documents from the three official databases above. The official databases are Chinese-language sources; Chinese keywords and official titles usually produce the best results.
 
