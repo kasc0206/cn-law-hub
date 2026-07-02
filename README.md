@@ -4,7 +4,7 @@
 
 一个用于查询、检索、核验、下载、导出和批量采集中国官方法律数据的 Claude Code / Kimi Agent / Codex skill。
 
-支持七个官方数据源：
+支持八个官方数据源：
 
 1. **国家法律法规数据库 (NPC)** — `flk.npc.gov.cn`
 2. **国家规章库 (Gov Rules)** — `gov.cn/zhengce/xxgk/gjgzk/`
@@ -13,6 +13,7 @@
 5. **司法部行政法规库** — `xzfg.moj.gov.cn`
 6. **党内法规库** — `www.12371.cn/special/dnfg/`
 7. **国防部法规文库** — `www.mod.gov.cn/gfbw/fgwx/`
+8. **税务法规库** — `fgk.chinatax.gov.cn`
 
 > This is a Claude Code / Kimi Agent / Codex skill for searching, verifying, downloading, and exporting Chinese legal documents from the three official databases above. The official databases are Chinese-language sources; Chinese keywords and official titles usually produce the best results.
 
