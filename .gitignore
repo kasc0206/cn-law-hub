@@ -27,3 +27,9 @@ evals/
 
 # R / editor history
 .Rhistory
+
+# Crawler run logs
+*_output/logs/
+
+# Crawler run logs (generated output)
+*_output/logs/

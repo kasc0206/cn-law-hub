@@ -22,9 +22,9 @@ from pathlib import Path
 from urllib.parse import urljoin
 
 from common import (
-    DEFAULT_USER_AGENT,
     _CacheManager,
     clean_text,
+    create_crawler_headers,
     ensure_dir,
     get_cache,
     http_request,
@@ -63,10 +63,7 @@ CATEGORY_URLS = {
     "zfjs": f"{FG_BASE}/zfjs/",
 }
 
-HEADERS = {
-    "User-Agent": DEFAULT_USER_AGENT,
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-}
+HEADERS = create_crawler_headers()
 
 _cache = get_cache("mee-law-db")
 

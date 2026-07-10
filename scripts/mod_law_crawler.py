@@ -24,16 +24,14 @@ from urllib.parse import urljoin
 from common import (
     _CacheManager,
     clean_text,
+    create_crawler_headers,
     ensure_dir,
-    format_request_exception,
-    DEFAULT_USER_AGENT,
     get_cache,
     http_request,
     init_limiter,
     render_markdown_report,
     sanitize_filename,
     setup_logger,
-    unique_path,
     write_csv,
     write_json,
     write_jsonl,
@@ -59,10 +57,7 @@ CATEGORY_MAP = {
     "政策解读": "zcjd",
 }
 
-HEADERS = {
-    "User-Agent": DEFAULT_USER_AGENT,
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-}
+HEADERS = create_crawler_headers()
 
 _cache = get_cache("mod-law-db")
 
@@ -134,12 +129,14 @@ def parse_category_page(html: str, category: str = "") -> list[dict]:
             if cat_match:
                 sub_cat = cat_match.group(1)
 
-        records.append({
-            "source": "mod_law",
-            "category": sub_cat,
-            "title": clean_text(text),
-            "url": full_url,
-        })
+        records.append(
+            {
+                "source": "mod_law",
+                "category": sub_cat,
+                "title": clean_text(text),
+                "url": full_url,
+            }
+        )
 
     return records
 
@@ -201,9 +198,7 @@ def fetch_detail(detail_url: str, timeout: int = 30) -> dict:
             or soup.select_one("article")
         )
         if content_node:
-            result["content_text"] = clean_text(
-                content_node.get_text("\n", strip=True)
-            )
+            result["content_text"] = clean_text(content_node.get_text("\n", strip=True))
 
         # Date
         date_node = (
@@ -214,9 +209,7 @@ def fetch_detail(detail_url: str, timeout: int = 30) -> dict:
             or soup.select_one(".sj")
         )
         if date_node:
-            result["publish_date"] = clean_text(
-                date_node.get_text(" ", strip=True)
-            )
+            result["publish_date"] = clean_text(date_node.get_text(" ", strip=True))
 
         # Source
         source_node = (
@@ -225,9 +218,7 @@ def fetch_detail(detail_url: str, timeout: int = 30) -> dict:
             or soup.select_one(".ly")
         )
         if source_node:
-            result["source"] = clean_text(
-                source_node.get_text(" ", strip=True)
-            )
+            result["source"] = clean_text(source_node.get_text(" ", strip=True))
 
     _cache.set(cache_key, result)
     return result
@@ -246,8 +237,9 @@ def search_keyword_in_records(records: list[dict], keyword: str) -> list[dict]:
     return [r for r in records if kw in r["title"].lower()]
 
 
-def search_collect(keyword: str = "", category: str = "",
-                   max_items: int = 20, timeout: int = 30) -> list[dict]:
+def search_collect(
+    keyword: str = "", category: str = "", max_items: int = 20, timeout: int = 30
+) -> list[dict]:
     """Search and collect military regulations."""
     records = []
     cat_key = CATEGORY_MAP.get(category, "")
@@ -278,8 +270,9 @@ def search_collect(keyword: str = "", category: str = "",
 # ---------------------------------------------------------------------------
 
 
-def save_results(records: list[dict], output_dir: Path,
-                 keyword: str = "", category: str = "") -> Path:
+def save_results(
+    records: list[dict], output_dir: Path, keyword: str = "", category: str = ""
+) -> Path:
     """Save search results to output directory."""
     label = keyword or category or "all"
     output_root = ensure_dir(
@@ -305,12 +298,21 @@ def save_results(records: list[dict], output_dir: Path,
     md = render_markdown_report(
         f"国防部法规文库统计报告 - {label}",
         [
-            ("概览", {"keyword": keyword, "category": category, "record_count": len(records)}),
+            (
+                "概览",
+                {
+                    "keyword": keyword,
+                    "category": category,
+                    "record_count": len(records),
+                },
+            ),
             ("分类分布", stats["category_distribution"]),
         ],
     )
     write_text(output_root / "stats_report.md", md)
-    write_json(output_root / "summary.json", {"source": "mod_law", "count": len(records)})
+    write_json(
+        output_root / "summary.json", {"source": "mod_law", "count": len(records)}
+    )
     return output_root
 
 
@@ -332,16 +334,23 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--search", metavar="KEYWORD", help="Search keyword in titles")
-    parser.add_argument("--category",
-                        choices=list(CATEGORY_MAP.keys()),
-                        default="全部",
-                        help="Filter by category (default: 全部)")
+    parser.add_argument(
+        "--category",
+        choices=list(CATEGORY_MAP.keys()),
+        default="全部",
+        help="Filter by category (default: 全部)",
+    )
     parser.add_argument("--size", type=int, default=20, help="Max items (default: 20)")
     parser.add_argument("--info", metavar="URL", help="Fetch detail page")
-    parser.add_argument("--output", "-o", default="./mod_law_output",
-                        help="Output directory (default: ./mod_law_output)")
-    parser.add_argument("--rate-limit", choices=["auto", "off", "fixed", "adaptive"],
-                        default="auto")
+    parser.add_argument(
+        "--output",
+        "-o",
+        default="./mod_law_output",
+        help="Output directory (default: ./mod_law_output)",
+    )
+    parser.add_argument(
+        "--rate-limit", choices=["auto", "off", "fixed", "adaptive"], default="auto"
+    )
     parser.add_argument("--timeout", type=int, default=30)
     parser.add_argument("--no-cache", action="store_true")
     parser.add_argument("--cache-stats", action="store_true")
@@ -385,8 +394,9 @@ def main() -> int:
     limiter, forced = init_limiter(args.rate_limit)
     limiter.init_for_task(estimated_requests=max(1, 7), forced_mode=forced)
 
-    logger.info("Start: keyword=%s, category=%s, size=%d",
-                args.search, args.category, args.size)
+    logger.info(
+        "Start: keyword=%s, category=%s, size=%d", args.search, args.category, args.size
+    )
 
     records = search_collect(
         keyword=args.search or "",
